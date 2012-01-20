@@ -4,3 +4,6 @@
 [submodule "slime"]
 	path = slime
 	url = git://github.com/nablaone/slime.git
+[submodule "multi-web-mode"]
+	path = multi-web-mode
+	url = https://github.com/fgallina/multi-web-mode.git
