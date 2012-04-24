@@ -54,3 +54,10 @@
                    (css-mode "<style +type=\"text/css\"[^>]*>" "</style>")))
 (setq mweb-filename-extensions '("php" "htm" "html" "ctp" "phtml" "php4" "php5"))
 (multi-web-global-mode 1)
+
+(add-to-list 'load-path "~/.emacs.d/flymake-jslint")
+(require 'flymake-jslint)
+(add-hook 'javascript-mode-hook
+    (lambda () (flymake-mode 1)))
+(add-hook 'js-mode-hook
+    (lambda () (flymake-mode 1)))
