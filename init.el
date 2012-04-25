@@ -61,3 +61,7 @@
     (lambda () (flymake-mode 1)))
 (add-hook 'js-mode-hook
     (lambda () (flymake-mode 1)))
+
+(add-to-list 'load-path "~/.emacs.d/pde")
+(add-to-list 'load-path "~/.emacs.d/emacs-dirtree")
+(require 'dirtree)
