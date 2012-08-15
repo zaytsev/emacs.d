@@ -13,8 +13,22 @@
 (setq ring-bell-function 'ignore)
 (line-number-mode 1)
 (column-number-mode 1)
-
 (global-set-key [f1] 'menu-bar-mode)
+
+;; key board / input method settings
+(setq locale-coding-system 'utf-8)
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+(set-selection-coding-system 'utf-8)
+(prefer-coding-system 'utf-8)
+(set-language-environment "UTF-8") ; prefer utf-8 for language settings
+(set-input-method nil) ; no funky input for normal editing;
+(global-set-key (kbd "RET") 'newline-and-indent)
+
+(require 'package)
+(add-to-list 'package-archives
+	     '("marmalade" . "http://marmalade-repo.org/packages/"))
+(package-initialize)
 
 ;;; Color Theme Setup
 (add-to-list 'load-path "~/.emacs.d/color-theme")
@@ -22,9 +36,10 @@
 (require 'zenburn)
 (color-theme-zenburn)
 
-;;; White space
-(setq whitespace-style '(trailing lines space-before-tab indentation space-after-tab) whitespace-line-column 80)
-
+;; auto indent
+(setq auto-indent-on-visit-file t)
+(require 'auto-indent-mode)
+(auto-indent-global-mode)
 
 ;; clojure-mode
 (add-to-list 'load-path "~/.emacs.d/clojure-mode")
@@ -33,18 +48,11 @@
 ;; paredit
 (add-to-list 'load-path "~/.emacs.d/paredit")
 (require 'paredit)
+(defun lisp-enable-paredit-hook () (paredit-mode 1))
+(add-hook 'clojure-mode-hook 'lisp-enable-paredit-hook)
 
-;; slime
-(eval-after-load "slime" 
-  '(progn (slime-setup '(slime-repl))
-	(defun paredit-mode-enable () (paredit-mode 1))
-	(add-hook 'slime-mode-hook 'paredit-mode-enable)
-	(add-hook 'slime-repl-mode-hook 'paredit-mode-enable)
-	(setq slime-protocol-version 'ignore)))
-
-(add-to-list 'load-path "~/.emacs.d/slime")
-(require 'slime)
-(slime-setup)
+(require 'rainbow-delimiters)
+(add-hook 'clojure-mode-hook 'rainbow-delimiters-mode)
 
 (add-to-list 'load-path "~/.emacs.d/multi-web-mode")
 (require 'multi-web-mode)
@@ -55,13 +63,14 @@
 (setq mweb-filename-extensions '("php" "htm" "html" "ctp" "phtml" "php4" "php5"))
 (multi-web-global-mode 1)
 
-(add-to-list 'load-path "~/.emacs.d/flymake-jslint")
-(require 'flymake-jslint)
-(add-hook 'javascript-mode-hook
-    (lambda () (flymake-mode 1)))
-(add-hook 'js-mode-hook
-    (lambda () (flymake-mode 1)))
+;; whitespace
+;; nuke trailing whitespaces when writing to a file
+(setq whitespace-style
+      '(face trailing lines space-before-tab indentation space-after-tab) whitespace-line-column 80)
+(add-hook 'write-file-hooks 'delete-trailing-whitespace)
 
-(add-to-list 'load-path "~/.emacs.d/pde")
-(add-to-list 'load-path "~/.emacs.d/emacs-dirtree")
-(require 'dirtree)
+;; display only tails of lines longer than 80 columns, tabs and
+;; trailing whitespaces
+(setq whitespace-line-column 80
+      whitespace-style '(tabs trailing lines-tail))
+

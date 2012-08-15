@@ -1,12 +1,6 @@
 [submodule "clojure-mode"]
 	path = clojure-mode
 	url = git://github.com/technomancy/clojure-mode.git
-[submodule "slime"]
-	path = slime
-	url = git://github.com/nablaone/slime.git
 [submodule "multi-web-mode"]
 	path = multi-web-mode
 	url = https://github.com/fgallina/multi-web-mode.git
-[submodule "emacs-dirtree"]
-	path = emacs-dirtree
-	url = https://github.com/zkim/emacs-dirtree.git
