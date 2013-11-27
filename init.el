@@ -27,7 +27,9 @@
 
 (require 'package)
 (add-to-list 'package-archives
-	     '("marmalade" . "http://marmalade-repo.org/packages/"))
+  '("marmalade" . "http://marmalade-repo.org/packages/"))
+(add-to-list 'package-archives
+  '("melpa" . "http://melpa.milkbox.net/packages/") t)
 (package-initialize)
 
 ;;; Color Theme Setup
@@ -36,41 +38,68 @@
 (require 'zenburn)
 (color-theme-zenburn)
 
+(helm-mode 1)
+(achievements-mode 1)
+(projectile-global-mode 1)
+
+(autoload 'markdown-mode "markdown-mode"
+  "Major mode for editing Markdown files" t)
+(add-to-list 'auto-mode-alist '("\\.text\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
+
 ;; auto indent
-(setq auto-indent-on-visit-file t)
-(require 'auto-indent-mode)
-(auto-indent-global-mode)
+;; (setq auto-indent-on-visit-file t)
+;; (require 'auto-indent-mode)
+;; (auto-indent-global-mode)
+;; (setq lisp-indent-offset 2)
 
-;; clojure-mode
-(add-to-list 'load-path "~/.emacs.d/clojure-mode")
-(require 'clojure-mode)
-
-;; paredit
-(add-to-list 'load-path "~/.emacs.d/paredit")
-(require 'paredit)
 (defun lisp-enable-paredit-hook () (paredit-mode 1))
 (add-hook 'clojure-mode-hook 'lisp-enable-paredit-hook)
-
-(require 'rainbow-delimiters)
 (add-hook 'clojure-mode-hook 'rainbow-delimiters-mode)
+(setq clojure-defun-style-default-indent t)
 
-(add-to-list 'load-path "~/.emacs.d/multi-web-mode")
-(require 'multi-web-mode)
 (setq mweb-default-major-mode 'html-mode)
 (setq mweb-tags  '((php-mode "<\\?php\\|<\\? \\|<\\?=" "\\?>")
                    (js-mode "<script +\\(type=\"text/javascript\"\\|language=\"javascript\"\\)[^>]*>" "</script>")
                    (css-mode "<style +type=\"text/css\"[^>]*>" "</style>")))
 (setq mweb-filename-extensions '("php" "htm" "html" "ctp" "phtml" "php4" "php5"))
-(multi-web-global-mode 1)
+;;(multi-web-global-mode 1)
 
 ;; whitespace
 ;; nuke trailing whitespaces when writing to a file
 (setq whitespace-style
-      '(face trailing lines space-before-tab indentation space-after-tab) whitespace-line-column 80)
+      '(face trailing lines space-before-tab indentation space-after-tab) whitespace-line-column 120)
 (add-hook 'write-file-hooks 'delete-trailing-whitespace)
 
-;; display only tails of lines longer than 80 columns, tabs and
+;; display only tails of lines longer than 120 columns, tabs and
 ;; trailing whitespaces
-(setq whitespace-line-column 80
+(setq whitespace-line-column 120
       whitespace-style '(tabs trailing lines-tail))
 
+;; setting for auto-close brackets for electric-pair-mode regardless of current major mode syntax table
+(setq electric-pair-pairs '(
+                            (?\" . ?\")
+			    (?\' . ?\')
+			    (?\( . ?\))
+			    (?\{ . ?\})
+			    ) )
+
+;;
+;; enable a more powerful jump back function from ace jump mode
+;;
+(autoload
+  'ace-jump-mode-pop-mark
+  "ace-jump-mode"
+  "Ace jump back:-)"
+  t)
+(eval-after-load "ace-jump-mode"
+  '(ace-jump-mode-enable-mark-sync))
+(define-key global-map (kbd "C-x SPC") 'ace-jump-mode-pop-mark)
+
+(add-hook 'git-commit-mode-hook 'git-commit-training-wheels-mode)
+
+(global-set-key (kbd "C-c h") 'helm-mini)
+
+;; YAML
+(add-hook 'yaml-mode-hook 'flymake-yaml-load)
