@@ -25,12 +25,19 @@
 (set-input-method nil) ; no funky input for normal editing;
 (global-set-key (kbd "RET") 'newline-and-indent)
 
-(require 'package)
-(add-to-list 'package-archives
-  '("marmalade" . "http://marmalade-repo.org/packages/"))
-(add-to-list 'package-archives
-  '("melpa" . "http://melpa.milkbox.net/packages/") t)
-(package-initialize)
+(when (>= emacs-major-version 24)
+  (require 'package)
+  (package-initialize)
+  (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t))
+;;(require 'package)
+;;(package-initialize)
+;; (add-to-list 'package-archives
+;;  '("marmalade" . "http://marmalade-repo.org/packages/"))
+;;(add-to-list 'package-archives
+;;  '("melpa" . "http://melpa.milkbox.net/packages/"))
+;; (when (not package-archive-contents)
+;;  (package-refresh-contents))
+
 
 ;;; Color Theme Setup
 (add-to-list 'load-path "~/.emacs.d/color-theme")
